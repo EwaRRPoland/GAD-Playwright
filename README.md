@@ -44,9 +44,7 @@ This is a Test Automation project based on `Playwright` and `TypeScript`. The te
 ## Links
 
 - course https://jaktestowac.pl/course/playwright-wprowadzenie/
-- test site https://demo-bank.vercel.app/  
-  if link is broken check https://jaktestowac.pl/lesson/pw1s01l01/
-- code repository https://github.com/jaktestowac/playwright_automatyzacja_wprowadzenie
+- test site https://github.com/jaktestowac/gad-gui-api-demo/
 
 ## Commands
 
@@ -130,13 +128,16 @@ To quickly evaluate code use `DEBUG CONSOLE`.
   //     ...devices['Desktop Firefox'],
   //   },
   // },
- ``` 
-- enable video on fail
-  ```javascript
-  use: {
-      video: {'retain-on-failure'},
-  },
   ```
+
+````
+- enable video on fail
+ ```javascript
+ use: {
+     video: {'retain-on-failure'},
+ },
+````
+
 - enable Trace Viewer on fial
   ```javascript
   use: {

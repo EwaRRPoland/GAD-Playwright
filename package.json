@@ -1,0 +1,15 @@
+{
+  "name": "gad-playwright",
+  "version": "1.0.0",
+  "description": "This project focuses on testing the dedicated GAD application for testing purposes. For more details, visit [jaktestować-GAD](https://github.com/jaktestowac/gad-gui-api-demo).",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.2",
+    "prettier": "3.4.2"
+  }
+}
