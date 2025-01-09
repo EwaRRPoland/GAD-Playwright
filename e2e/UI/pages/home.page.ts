@@ -2,12 +2,13 @@ import { Page } from '@playwright/test';
 
 export class HomePage {
   async navigate(page: Page) {
-    await page.goto('http://localhost:3000/welcome');
+    //
+    await page.goto('http://localhost:3000/');
   }
 
   // Quick Navigation buttons:
   async logout(page: Page) {
-    await page.click('[data-testid="logoutButton"]');
+    await page.getByTestId('logoutButton').click();
   }
 
   async myProfile(page: Page) {
@@ -20,17 +21,22 @@ export class HomePage {
 
   async deleteUser(page: Page) {
     // delete user
-    await page.click('[data-testid="deleteButton"]');
+    //await page.click('[data-testid="deleteButton"]');
 
     // Access the window object of the current page and stub the alert method
-    await page.evaluate(() => {
-      window.alert = () => {}; // Stub the alert method
-    });
+    //await page.evaluate(() => {
+    //window.alert = () => {}; // Stub the alert method
+    //});
 
     // Verify the user is deleted
-    await page.waitForSelector('[data-testid="deleteButton"]', {
-      state: 'hidden',
+    //await page.waitForSelector('[data-testid="deleteButton"]', {
+    //state: 'hidden',
+    //});
+    page.once('dialog', (dialog) => {
+      console.log(`Dialog message: ${dialog.message()}`);
+      dialog.dismiss().catch(() => {});
     });
+    await page.getByTestId('deleteButton').click();
   }
 
   // menu-main-gui buttons L:

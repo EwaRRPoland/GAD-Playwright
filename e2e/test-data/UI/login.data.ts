@@ -1,10 +1,15 @@
 // positive
 //  user1
-export const firstName1 = 'John';
-export const lastName1 = 'Doe';
-export const email1 = 'john.doe@example.com';
-export const password1 = 'password123';
-
+// export const firstName1 = 'John';
+// export const lastName1 = 'Doe';
+// export const email1 = 'john.doe@example.com';
+// export const password1 = 'password123';
+export const loginData1 = {
+  firstName1: 'John',
+  lastName1: 'Doe',
+  email1: 'john.doe@example.com',
+  password1: 'password123',
+};
 //  user2
 export const firstName2 = 'Jane';
 export const lastName2 = 'Smith';
