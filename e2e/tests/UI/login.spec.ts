@@ -16,24 +16,28 @@ test.describe('User Registration, Login, and Deletion Test', () => {
     homePage = new HomePage(page);
   });
 
-  test('successful registration, login, and deletion', async ({ page }) => {
-    // Arrange
-    const { firstName, lastName, email, password } = loginData1;
+  test(
+    'successful registration, login, and deletion',
+    { tag: ['@e2e', '@registration', '@login', '@deletion'] },
+    async ({ page }) => {
+      // Arrange
+      const { firstName, lastName, email, password } = loginData1;
 
-    // Act - Register
-    await page.goto('http://localhost:3000/register.html');
-    await userPage.createUser(firstName, lastName, email, password);
+      // Act - Register
+      await page.goto('http://localhost:3000/register.html');
+      await userPage.createUser(firstName, lastName, email, password);
 
-    // Assert - Registration
-    await expect(page.getByTestId('alert-popup')).toHaveText('User created');
+      // Assert - Registration
+      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
 
-    // Act - Login
-    await loginPage.login(email, password);
+      // Act - Login
+      await loginPage.login(email, password);
 
-    // Assert - Login
-    await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
+      // Assert - Login
+      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
 
-    // Act & Assert - Deletion
-    await homePage.deleteUser();
-  });
+      // Act & Assert - Deletion
+      await homePage.deleteUser();
+    },
+  );
 });
