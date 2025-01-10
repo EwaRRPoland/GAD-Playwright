@@ -1,25 +1,30 @@
-import { Page } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 
-export class CreateUser {
-  async navigate(page: Page) {
-    await page.goto('http://localhost:3000/register.html');
+export class UserPage {
+  firstnameInput: Locator;
+  lastnameInput: Locator;
+  emailInput: Locator;
+  passwordInput: Locator;
+  registerButton: Locator;
+
+  constructor(private page: Page) {
+    this.firstnameInput = this.page.getByTestId('firstname-input');
+    this.lastnameInput = this.page.getByTestId('lastname-input');
+    this.emailInput = this.page.getByTestId('email-input');
+    this.passwordInput = this.page.getByTestId('password-input');
+    this.registerButton = this.page.getByTestId('register-button');
   }
-  async register(
-    page: Page,
-    firstName: string,
-    lastName: string,
+
+  async createUser(
+    firstname: string,
+    lastname: string,
     email: string,
     password: string,
-  ) {
-    await page.getByRole('link', { name: 'Register' }).click();
-    //await page.getByTestId('firstname-input').click();
-    await page.getByTestId('firstname-input').fill('Xxxx');
-    //await page.getByTestId('lastname-input').click();
-    await page.getByTestId('lastname-input').fill('Yyyy');
-    //await page.getByTestId('email-input').click();
-    await page.getByTestId('email-input').fill('abc@abc.abc');
-    //await page.getByTestId('password-input').click();
-    await page.getByTestId('password-input').fill('123$123');
-    await page.getByTestId('register-button').click();
+  ): Promise<void> {
+    await this.firstnameInput.fill(firstname);
+    await this.lastnameInput.fill(lastname);
+    await this.emailInput.fill(email);
+    await this.passwordInput.fill(password);
+    await this.registerButton.click();
   }
 }

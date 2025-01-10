@@ -1,131 +1,39 @@
-// import { test, expect } from '@playwright/test';
-// import { Login } from '../../UI/pages/login.page';
-// //import { LoginPage } from '../pages/login.page';
-// import { HomePage } from '../../UI/pages/home.page';
-// import { CreateUser } from '../../UI/pages/user.page';
-// import { loginData1 } from '../../test-data/UI/login.data';
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../../UI/pages/login.page';
+import { HomePage } from '../../UI/pages/home.page';
+import { UserPage } from '../../UI/pages/user.page';
 
-// test.describe('User register, login and delete to GAD', () => {
-//   let userCreate: CreateUser;
-//   let loginPage: Login;
-//   let homePage: HomePage;
-//   test.beforeEach(async ({ page }) => {
-//     userCreate = new CreateUser();
-//     await userCreate.navigate(page);
-//   });
+import { loginData1 } from '../../test-data/UI/login.data';
 
-//   test(
-//     'successful register and login with correct credentials',
-//     { tag: ['@login', '@smoke'] },
-//     async ({ page }) => {
-//       // Arrange
-//       loginPage = new Login();
-//       // const userId = loginData.userId;
-//       // const userPassword = loginData.userPassword;
-//       // const expectedUserName = 'Jan Demobankowy';
+test.describe('User Registration, Login, and Deletion Test', () => {
+  let loginPage: LoginPage;
+  let homePage: HomePage;
+  let userPage: UserPage;
 
-//       // Act
-//       await userCreate.register(page: Page, firstName: string, lastName: string, email: string, password: string);
-//       //await loginPage.login(userId, userPassword);
-//       await loginPage.login(page, email, password);
+  test.beforeEach(async ({ page }) => {
+    userPage = new UserPage(page);
+    loginPage = new LoginPage(page);
+    homePage = new HomePage(page);
+  });
 
-//       // Assert
-//       //await expect(loginPage.userName).toHaveText(expectedUserName);
-//     },
-//   );
-//   // import { test, expect } from '@playwright/test';
-//   // import { Login } from '../../UI/pages/login.page';
-//   // import { HomePage } from '../../UI/pages/home.page';
-//   // import { CreateUser } from '../../UI/pages/user.page';
-//   // // import {
-//   // //   firstName1,
-//   // //   lastName1,
-//   // //   email1,
-//   // //   password1,
-//   // //   firstName2,
-//   // //   lastName2,
-//   // //   email2,
-//   // //   password2,
-//   // //   firstName3,
-//   // //   lastName3,
-//   // //   email3,
-//   // //   password3,
-//   // // } from '../../test-data/UI/login.data';
-//   // import { loginData1 } from '../../test-data/UI/login.data';
+  test('successful registration, login, and deletion', async ({ page }) => {
+    // Arrange
+    const { firstName, lastName, email, password } = loginData1;
 
-//   // test.describe('Testing creating new user POP', () => {
-//   //   let loginPage: Login;
-//   //   let homePage: HomePage;
-//   //   let userCreate: CreateUser;
+    // Act - Register
+    await page.goto('http://localhost:3000/register.html');
+    await userPage.createUser(firstName, lastName, email, password);
 
-//   //   test.beforeEach(async ({ page }) => {
-//   //     loginPage = new Login();
-//   //     homePage = new HomePage();
-//   //     userCreate = new CreateUser();
-//   //     await userCreate.navigate(page);
-//   //   });
+    // Assert - Registration
+    await expect(page.getByTestId('alert-popup')).toHaveText('User created');
 
-//   //   test('Test1: should register, login, logout and delete user1', async ({
-//   //     page,
-//   //   }) => {
-//   //     // Arrange
-//   //     // const firstName = firstName1;
-//   //     // const lastName = lastName1;
-//   //     // const email = email1;
-//   //     // const password = password1;
-//   //     const firstName = loginData1.firstName1;
-//   //     const lastName = loginData1.lastName1;
-//   //     const email = loginData1.email1;
-//   //     const password = loginData1.password1;
+    // Act - Login
+    await loginPage.login(email, password);
 
-//   //     // Act
-//   //     await userCreate.register(page, firstName, lastName, email, password);
-//   //     await loginPage.navigate(page);
-//   //     await loginPage.login(page, email, password);
-//   //     await homePage.logout(page);
-//   //     await loginPage.navigate(page);
-//   //     await loginPage.login(page, email, password);
-//   //   });
+    // Assert - Login
+    await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
 
-//   //   test('Test2: should register, login, logout and delete user2', async ({
-//   //     page,
-//   //   }) => {
-//   //     // Arrange
-//   //     const firstName = firstName2;
-//   //     const lastName = lastName2;
-//   //     const email = email2;
-//   //     const password = password2;
-
-//   //     // Act
-//   //     await userCreate.register(page, firstName, lastName, email, password);
-//   //     await loginPage.navigate(page);
-//   //     await loginPage.login(page, email, password);
-//   //     await homePage.logout(page);
-//   //     await loginPage.navigate(page);
-//   //     await loginPage.login(page, email, password);
-//   //   });
-
-//   //   test('Test3: should register, login, logout and delete user3', async ({
-//   //     page,
-//   //   }) => {
-//   //     // Arrange
-//   //     const firstName = firstName3;
-//   //     const lastName = lastName3;
-//   //     const email = email3;
-//   //     const password = password3;
-
-//   //     // Act
-//   //     await userCreate.register(page, firstName, lastName, email, password);
-//   //     await loginPage.navigate(page);
-//   //     await loginPage.login(page, email, password);
-//   //     await homePage.logout(page);
-//   //     await loginPage.navigate(page);
-//   //     await loginPage.login(page, email, password);
-//   //   });
-
-//   test.afterEach(async ({ page }) => {
-//     //await homePage.navigate(page);
-//     homePage = new HomePage();
-//     await homePage.deleteUser(page);
-//   });
-// });
+    // Act & Assert - Deletion
+    await homePage.deleteUser();
+  });
+});

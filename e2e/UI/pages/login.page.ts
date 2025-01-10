@@ -1,21 +1,25 @@
-import { Page } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 
-export class Login {
-  async navigate(page: Page) {
-    await page.goto('http://localhost:3000/login/');
+export class LoginPage {
+  loginInput: Locator;
+  passwordInput: Locator;
+  loginButton: Locator;
+  keepMeSignedInCheckbox: Locator;
+  userName: Locator;
+
+  constructor(private page: Page) {
+    this.loginInput = this.page.getByPlaceholder('Enter User Email');
+    this.passwordInput = this.page.getByPlaceholder('Enter Password');
+    this.keepMeSignedInCheckbox = this.page.getByText('keep me sign in');
+    this.loginButton = this.page.getByRole('button', { name: 'LogIn' });
+    this.userName = this.page.getByTestId('hello');
   }
 
-  async login(page: Page, email: string, password: string) {
-    // await page.fill(':nth-child(2) > #username', email);
-    // await page.fill('#password', password);
-    // await page.click('#loginButton');
-    //
-    //await page.getByPlaceholder('Enter User Email').click();
-    await page.getByPlaceholder('Enter User Email').fill('abc@abc.abc');
-    //await page.getByPlaceholder('Enter User Email').click();
-    //await page.getByPlaceholder('Enter Password').click();
-    await page.getByPlaceholder('Enter Password').fill('123$123');
-    await page.getByLabel('keep me sign in').check();
-    await page.getByRole('button', { name: 'LogIn' }).click();
+  async login(email: string, password: string): Promise<void> {
+    await this.page.goto('http://localhost:3000/login/');
+    await this.loginInput.fill(email);
+    await this.passwordInput.fill(password);
+    await this.keepMeSignedInCheckbox.click();
+    await this.loginButton.click();
   }
 }
