@@ -5,7 +5,7 @@ export class HomePage {
   deleteUserButton: Locator;
 
   constructor(private page: Page) {
-    this.logoutButton = this.page.getByTestId('logout-button');
+    this.logoutButton = this.page.getByTestId('logoutButton');
     this.deleteUserButton = this.page.getByTestId('deleteButton');
   }
 

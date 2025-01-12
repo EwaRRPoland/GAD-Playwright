@@ -124,4 +124,46 @@ test.describe('User Registration, Login and Deletion Test', () => {
       await homePage.deleteUser();
     },
   );
+  test(
+    'successful registration, login, logout and relogin, deletion',
+    {
+      tag: [
+        '@e2e',
+        '@registration',
+        '@login',
+        '@logout',
+        '@relogin',
+        '@deletion',
+      ],
+    },
+    async ({ page }) => {
+      // Arrange
+      const { firstName, lastName, email, password } = loginData1;
+
+      // Act - Register
+      await page.goto('http://localhost:3000/register.html');
+      await userPage.createUser(firstName, lastName, email, password);
+
+      // Assert - Registration
+      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
+
+      // Act - Login
+      await loginPage.login(email, password);
+
+      // Assert - Login
+      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
+
+      // Act - Logout
+      await homePage.logout();
+
+      // Act - Login
+      await loginPage.login(email, password);
+
+      // Assert - Login
+      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
+
+      // Act & Assert - Deletion
+      await homePage.deleteUser();
+    },
+  );
 });
