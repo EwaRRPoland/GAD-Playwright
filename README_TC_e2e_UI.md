@@ -174,3 +174,55 @@ Login fails with an invalid password, but registration and deletion are successf
 **Notes:**
 
 - Ensure proper handling of invalid password during login.
+
+---
+
+### Test Case ID: TC-005
+
+**Title:** Successful Registration, Login, Logout, Relogin, and Deletion
+
+**Objective:**  
+To verify that a user can successfully register, login, logout, relogin, and delete the account.
+
+**Preconditions:**
+
+- User has access to the registration page.
+- The application is up and running.
+- No user with the same email address already exists.
+
+**Test Steps:**
+
+1. Navigate to the registration page.
+2. Fill in the "First Name" with `John`.
+3. Fill in the "Last Name" with `Doe`.
+4. Fill in the "Email" with `john.doe@example.com`.
+5. Fill in the "Password" with `password123`.
+6. Click the "Register" button.
+7. Verify the message "User created" is displayed.
+8. Navigate to the login page.
+9. Fill in the "Email" with `john.doe@example.com`.
+10. Fill in the "Password" with `password123`.
+11. Click the "LogIn" button.
+12. Verify the welcome message "Hi john.doe@example.com!" is displayed.
+13. Click the "Logout" button.
+14. Verify the user is logged out.
+15. Fill in the "Email" with `john.doe@example.com`.
+16. Fill in the "Password" with `password123`.
+17. Click the "LogIn" button.
+18. Verify the welcome message "Hi john.doe@example.com!" is displayed.
+19. Click the "Delete Account" button.
+20. Handle the account deletion confirmation dialog.
+
+**Expected Result:**  
+User can successfully register, login, logout, relogin, and delete the account.
+
+**Actual Result:**  
+[Description of the actual result observed during testing]
+
+**Status:**  
+[Pass/Fail]
+
+**Notes:**
+
+- Ensure proper handling of each action step.
+- Verify that all messages and actions are properly displayed and executed.
