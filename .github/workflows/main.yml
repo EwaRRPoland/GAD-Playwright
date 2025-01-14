@@ -1,6 +1,8 @@
 name: Playwright tests
 on:
-  - push
+  push:
+    branches: ['main']
+
 jobs:
   playwright-run:
     runs-on: ubuntu-latest
@@ -16,19 +18,14 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: Create directories for test results
-        run: |
-          mkdir -p results/playwright-report
-          mkdir -p results/playwright-test-results
+      - name: Install Playwright Chromium Browser
+        run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
         run: npx playwright test
-
-      - name: List test result files
-        run: ls -R results
 
       - name: Archive tests results
         if: success() || failure()
@@ -36,5 +33,5 @@ jobs:
         with:
           name: test-report
           path: |
-            ./results/playwright-report/**/*.*
-            ./results/playwright-test-results/**/*.*
+            ./playwright-report/**/*.*
+            ./test-results/**/*.*
