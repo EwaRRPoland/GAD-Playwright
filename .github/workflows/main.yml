@@ -1,0 +1,40 @@
+name: Playwright tests
+on:
+  - push
+jobs:
+  playwright-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Run GAD in Docker Image
+        run: docker run -p 3000:3000 -d jaktestowac/gad
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Create directories for test results
+        run: |
+          mkdir -p results/playwright-report
+          mkdir -p results/playwright-test-results
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: List test result files
+        run: ls -R results
+
+      - name: Archive tests results
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: |
+            ./results/playwright-report/**/*.*
+            ./results/playwright-test-results/**/*.*
