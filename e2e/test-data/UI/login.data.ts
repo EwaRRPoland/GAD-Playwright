@@ -1,24 +1,24 @@
 // user1
 export const loginData1 = {
-  firstName: 'John',
+  firstName: 'Alan',
   lastName: 'Doe',
-  email: 'john.doe@example.com',
+  email: 'alan.doe@example.com',
   password: 'password123',
 };
 
 // user2
 export const loginData2 = {
-  firstName: 'Jane',
+  firstName: 'Anita',
   lastName: 'Smith',
-  email: 'jane.smith@example.com',
+  email: 'anita.smith@example.com',
   password: 'password123',
 };
 
 // user3
 export const loginData3 = {
-  firstName: 'Alice',
+  firstName: 'Zosia',
   lastName: 'Johnson',
-  email: 'alice.johnson@example.com',
+  email: 'zosia.johnson@example.com',
   password: 'password123',
 };
 
