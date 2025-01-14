@@ -315,9 +315,10 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
 
   // 5
   // no password validation, you can create an account with a single character password
+  // 5a
   test(
-    'should validate password requirements during registration',
-    { tag: ['@smoke', '@registration'] },
+    'should validate password requirements during registration- too short',
+    { tag: ['@smoke', '@registration', '@login'] },
     async ({ page }) => {
       // Arrange
       const { firstName, lastName, email } = loginData1;
@@ -339,10 +340,110 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
     },
   );
 
+  // 5b
+  test(
+    'should validate password requirements during registration- lacks uppercase letters and special characters',
+    { tag: ['@smoke', '@registration', '@login'] },
+    async ({ page }) => {
+      // Arrange
+      const { firstName, lastName, email } = loginData1;
+      const passwordShort = 'abcde123';
+      // Act - Register
+      await userPage.createUser(firstName, lastName, email, passwordShort);
+
+      // Assert - Registration
+      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
+
+      // Act - Login
+      await loginPage.login(email, passwordShort);
+
+      // Assert - Login
+      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
+
+      // Act & Assert - Deletion
+      await homePage.deleteUser();
+    },
+  );
+
+  // 5c
+  test(
+    'should validate password requirements during registration - commonly used word',
+    { tag: ['@smoke', '@registration', '@login'] },
+    async ({ page }) => {
+      // Arrange
+      const { firstName, lastName, email } = loginData1;
+      const passwordShort = 'password!';
+      // Act - Register
+      await userPage.createUser(firstName, lastName, email, passwordShort);
+
+      // Assert - Registration
+      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
+
+      // Act - Login
+      await loginPage.login(email, passwordShort);
+
+      // Assert - Login
+      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
+
+      // Act & Assert - Deletion
+      await homePage.deleteUser();
+    },
+  );
+
+  // 5d
+  test(
+    'should validate password requirements during registration - too predictable',
+    { tag: ['@smoke', '@registration', '@login'] },
+    async ({ page }) => {
+      // Arrange
+      const { firstName, lastName, email } = loginData1;
+      const passwordShort = 'Qwerty1';
+      // Act - Register
+      await userPage.createUser(firstName, lastName, email, passwordShort);
+
+      // Assert - Registration
+      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
+
+      // Act - Login
+      await loginPage.login(email, passwordShort);
+
+      // Assert - Login
+      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
+
+      // Act & Assert - Deletion
+      await homePage.deleteUser();
+    },
+  );
+
+  // 5e
+  test(
+    'should validate password requirements during registration - consists only of digits',
+    { tag: ['@smoke', '@registration', '@login'] },
+    async ({ page }) => {
+      // Arrange
+      const { firstName, lastName, email } = loginData1;
+      const passwordShort = '12345678';
+      // Act - Register
+      await userPage.createUser(firstName, lastName, email, passwordShort);
+
+      // Assert - Registration
+      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
+
+      // Act - Login
+      await loginPage.login(email, passwordShort);
+
+      // Assert - Login
+      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
+
+      // Act & Assert - Deletion
+      await homePage.deleteUser();
+    },
+  );
+
   // 6
   test(
     'should not allow login after account deletion',
-    { tag: ['@e2e', '@registration', '@login', '@deletion', '@relogin'] },
+    { tag: ['@e2e', '@registration', '@login', '@deletion'] },
     async ({ page }) => {
       // Arrange
       const { firstName, lastName, email, password } = loginData1;
@@ -376,23 +477,147 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
     },
   );
 
-  // 7 - to do
-  //   test('should not login user with invalid email, password, empty required fields', async ({ page }) => {
-  //     // Implementacja testu zarządzania danymi po usunięciu konta
-  //   });
+  // 7a
+  test(
+    'should not login user with invalid email',
+    { tag: ['@e2e', '@registration', '@login', '@deletion'] },
+    async ({ page }) => {
+      // Arrange
+      const { firstName, lastName, email, password } = loginData1;
+      const emailInvalid = 'a@h.com';
+
+      // Act - Register
+      await userPage.createUser(firstName, lastName, email, password);
+
+      // Assert - Registration
+      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
+
+      // Act - Invalid Login
+      await loginPage.login(emailInvalid, password);
+
+      // Assert - Login
+      await expect(page.getByTestId('login-error')).toHaveText(
+        `Invalid username or password`,
+      );
+
+      // Act - RE- Login
+      await loginPage.login(email, password);
+
+      // Assert - Login
+      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
+
+      // Act & Assert - Deletion
+      await homePage.deleteUser();
+    },
+  );
+
+  // 7b
+  test(
+    'should not login user with invalid password',
+    { tag: ['@e2e', '@registration', '@login', '@deletion'] },
+    async ({ page }) => {
+      // Arrange
+      const { firstName, lastName, email, password } = loginData1;
+      const passwordInvalid = '45!5';
+
+      // Act - Register
+      await userPage.createUser(firstName, lastName, email, password);
+
+      // Assert - Registration
+      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
+
+      // Act - Invalid password
+      await loginPage.login(email, passwordInvalid);
+
+      // Assert - Login
+      await expect(page.getByTestId('login-error')).toHaveText(
+        `Invalid username or password`,
+      );
+
+      // Act - RE- Login
+      await loginPage.login(email, password);
+
+      // Assert - Login
+      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
+
+      // Act & Assert - Deletion
+      await homePage.deleteUser();
+    },
+  );
+
+  // 7c
+  test(
+    'should not login user with empty email',
+    { tag: ['@e2e', '@registration', '@login', '@deletion'] },
+    async ({ page }) => {
+      // Arrange
+      const { firstName, lastName, email, password } = loginData1;
+      const emailInvalid = '';
+
+      // Act - Register
+      await userPage.createUser(firstName, lastName, email, password);
+
+      // Assert - Registration
+      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
+
+      // Act - Invalid Login
+      await loginPage.login(emailInvalid, password);
+
+      // Assert - Login
+      await expect(page.getByTestId('login-error')).toHaveText(
+        `Invalid username or password`,
+      );
+
+      // Act - RE- Login
+      await loginPage.login(email, password);
+
+      // Assert - Login
+      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
+
+      // Act & Assert - Deletion
+      await homePage.deleteUser();
+    },
+  );
+
+  // 7d
+  test(
+    'should not login user with empty password',
+    { tag: ['@e2e', '@registration', '@login', '@deletion'] },
+    async ({ page }) => {
+      // Arrange
+      const { firstName, lastName, email, password } = loginData1;
+      const passwordInvalid = '';
+
+      // Act - Register
+      await userPage.createUser(firstName, lastName, email, password);
+
+      // Assert - Registration
+      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
+
+      // Act - Invalid Login
+      await loginPage.login(email, passwordInvalid);
+
+      // Assert - Login
+      await expect(page.getByTestId('login-error')).toHaveText(
+        `Invalid username or password`,
+      );
+
+      // Act - RE- Login
+      await loginPage.login(email, password);
+
+      // Assert - Login
+      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
+
+      // Act & Assert - Deletion
+      await homePage.deleteUser();
+    },
+  );
 
   // 8
   test(
     'should log out user successfully. Successful registration, login, logout and relogin, deletion',
     {
-      tag: [
-        '@e2e',
-        '@registration',
-        '@login',
-        '@logout',
-        '@relogin',
-        '@deletion',
-      ],
+      tag: ['@e2e', '@registration', '@login', '@logout', '@deletion'],
     },
     async ({ page }) => {
       // Arrange
