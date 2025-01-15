@@ -8,6 +8,7 @@ import {
   loginData2,
   loginData3,
 } from '../../test-data/UI/login.data';
+import { invalidEmails, invalidPasswords } from '../../test-data/UI/test.data';
 
 test.describe('User Authentication Tests. User Registration, Login and Deletion Test', () => {
   let loginPage: LoginPage;
@@ -21,18 +22,8 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
 
     await page.goto('http://localhost:3000/register.html');
   });
+
   // 3 replaces test group no. 3
-  const invalidEmails = [
-    'jane.smith@example',
-    '@example.com',
-    'jane@com',
-    'anna.kowalska.yahoo.com',
-    'anna@kowalska@@yahoo.com',
-    'jan.kowalski@',
-    'anna.kowalska@ yahoo.com',
-    'an!na @gmail.com',
-    // place for more invalid e-mail
-  ];
 
   invalidEmails.forEach((incorrectEmail) => {
     test(
@@ -60,15 +51,7 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
 
   // 5 replaces test group no. 5
   // no password validation, you can create an account with a single character password
-
-  const invalidPasswords = [
-    'k',
-    'abcde123',
-    'assword!',
-    'Qwerty1',
-    '12345678',
-    // place for more invalid passwords
-  ];
+  // these tests will fail once password verification is implemented
 
   invalidPasswords.forEach((password) => {
     test(
