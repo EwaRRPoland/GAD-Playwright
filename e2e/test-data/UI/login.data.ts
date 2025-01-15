@@ -2,7 +2,7 @@
 export const loginData1 = {
   firstName: 'Alann',
   lastName: 'Doe',
-  email: 'alannnn.doe@example.com',
+  email: 'alanalan.doe@example.com',
   password: 'password123',
 };
 
@@ -18,7 +18,7 @@ export const loginData2 = {
 export const loginData3 = {
   firstName: 'Zosia',
   lastName: 'Johnson',
-  email: 'zosiaaa.johnson@example.com',
+  email: 'zosiazosia.johnson@example.com',
   password: 'password123',
 };
 

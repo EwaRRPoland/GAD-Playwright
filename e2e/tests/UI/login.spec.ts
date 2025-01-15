@@ -58,6 +58,46 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
     );
   });
 
+  // 5 replaces test group no. 5
+  // no password validation, you can create an account with a single character password
+
+  const invalidPasswords = [
+    'k',
+    'abcde123',
+    'assword!',
+    'Qwerty1',
+    '12345678',
+    // place for more invalid passwords
+  ];
+
+  invalidPasswords.forEach((password) => {
+    test(
+      `should validate password requirements during registration: ${password}`,
+      { tag: ['@smoke', '@registration', '@login'] },
+      async ({ page }) => {
+        // Arrange
+        const { firstName, lastName, email } = loginData1;
+
+        // Act - Register
+        await userPage.createUser(firstName, lastName, email, password);
+
+        // Assert - Registration
+        await expect(page.getByTestId('alert-popup')).toHaveText(
+          'User created',
+        );
+
+        // Act - Login
+        await loginPage.login(email, password);
+
+        // Assert - Login
+        await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
+
+        // Act & Assert - Deletion
+        await homePage.deleteUser();
+      },
+    );
+  });
+
   // 1
   test(
     'should register a new user successfully and log in',
@@ -189,133 +229,6 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
       );
       // Act - Re-Login to deletion
       await loginPage.login(email, password);
-
-      // Assert - Login
-      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
-
-      // Act & Assert - Deletion
-      await homePage.deleteUser();
-    },
-  );
-
-  // 5
-  // no password validation, you can create an account with a single character password
-  // 5a
-  test(
-    'should validate password requirements during registration- too short',
-    { tag: ['@smoke', '@registration', '@login'] },
-    async ({ page }) => {
-      // Arrange
-      const { firstName, lastName, email } = loginData1;
-      const passwordShort = 'k';
-      // Act - Register
-      await userPage.createUser(firstName, lastName, email, passwordShort);
-
-      // Assert - Registration
-      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
-
-      // Act - Login
-      await loginPage.login(email, passwordShort);
-
-      // Assert - Login
-      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
-
-      // Act & Assert - Deletion
-      await homePage.deleteUser();
-    },
-  );
-
-  // 5b
-  test(
-    'should validate password requirements during registration- lacks uppercase letters and special characters',
-    { tag: ['@smoke', '@registration', '@login'] },
-    async ({ page }) => {
-      // Arrange
-      const { firstName, lastName, email } = loginData1;
-      const passwordShort = 'abcde123';
-      // Act - Register
-      await userPage.createUser(firstName, lastName, email, passwordShort);
-
-      // Assert - Registration
-      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
-
-      // Act - Login
-      await loginPage.login(email, passwordShort);
-
-      // Assert - Login
-      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
-
-      // Act & Assert - Deletion
-      await homePage.deleteUser();
-    },
-  );
-
-  // 5c
-  test(
-    'should validate password requirements during registration - commonly used word',
-    { tag: ['@smoke', '@registration', '@login'] },
-    async ({ page }) => {
-      // Arrange
-      const { firstName, lastName, email } = loginData1;
-      const passwordShort = 'password!';
-      // Act - Register
-      await userPage.createUser(firstName, lastName, email, passwordShort);
-
-      // Assert - Registration
-      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
-
-      // Act - Login
-      await loginPage.login(email, passwordShort);
-
-      // Assert - Login
-      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
-
-      // Act & Assert - Deletion
-      await homePage.deleteUser();
-    },
-  );
-
-  // 5d
-  test(
-    'should validate password requirements during registration - too predictable',
-    { tag: ['@smoke', '@registration', '@login'] },
-    async ({ page }) => {
-      // Arrange
-      const { firstName, lastName, email } = loginData1;
-      const passwordShort = 'Qwerty1';
-      // Act - Register
-      await userPage.createUser(firstName, lastName, email, passwordShort);
-
-      // Assert - Registration
-      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
-
-      // Act - Login
-      await loginPage.login(email, passwordShort);
-
-      // Assert - Login
-      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
-
-      // Act & Assert - Deletion
-      await homePage.deleteUser();
-    },
-  );
-
-  // 5e
-  test(
-    'should validate password requirements during registration - consists only of digits',
-    { tag: ['@smoke', '@registration', '@login'] },
-    async ({ page }) => {
-      // Arrange
-      const { firstName, lastName, email } = loginData1;
-      const passwordShort = '12345678';
-      // Act - Register
-      await userPage.createUser(firstName, lastName, email, passwordShort);
-
-      // Assert - Registration
-      await expect(page.getByTestId('alert-popup')).toHaveText('User created');
-
-      // Act - Login
-      await loginPage.login(email, passwordShort);
 
       // Assert - Login
       await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
