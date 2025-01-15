@@ -21,6 +21,43 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
 
     await page.goto('http://localhost:3000/register.html');
   });
+  // 3 replaces test group no. 3
+  const invalidEmails = [
+    'jane.smith@example',
+    '@example.com',
+    'jane@com',
+    'anna.kowalska.yahoo.com',
+    'anna@kowalska@@yahoo.com',
+    'jan.kowalski@',
+    'anna.kowalska@ yahoo.com',
+    'an!na @gmail.com',
+    // place for more invalid e-mail
+  ];
+
+  invalidEmails.forEach((incorrectEmail) => {
+    test(
+      `should not register user with invalid email format: ${incorrectEmail}`,
+      { tag: ['@smoke', '@registration'] },
+      async ({ page }) => {
+        // Arrange
+        const { firstName, lastName, password } = loginData2;
+
+        // Act - Register
+        await userPage.createUser(
+          firstName,
+          lastName,
+          incorrectEmail,
+          password,
+        );
+
+        // Assert - Registration
+        await expect(page.getByText('Please provide a valid email')).toHaveText(
+          'Please provide a valid email address',
+        );
+      },
+    );
+  });
+
   // 1
   test(
     'should register a new user successfully and log in',
@@ -114,158 +151,6 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
       // Assert - Registration
       await expect(page.getByText('This field is required')).toHaveText(
         'This field is required',
-      );
-    },
-  );
-
-  // 3a
-  test(
-    'should not register user with invalid email format: jane.smith@example',
-    { tag: ['@smoke', '@registration'] },
-    async ({ page }) => {
-      // Arrange
-      const incorrectEmail = 'jane.smith@example';
-      const { firstName, lastName, password } = loginData2;
-
-      // Act - Register
-      await userPage.createUser(firstName, lastName, incorrectEmail, password);
-
-      // Assert - Registration
-      await expect(page.getByText('Please provide a valid email')).toHaveText(
-        'Please provide a valid email address',
-      );
-    },
-  );
-
-  // 3b
-  test(
-    'should not register user with invalid email format: @example.com',
-    { tag: ['@smoke', '@registration'] },
-    async ({ page }) => {
-      // Arrange
-      const incorrectEmail = '@example.com';
-      const { firstName, lastName, password } = loginData2;
-
-      // Act - Register
-      await userPage.createUser(firstName, lastName, incorrectEmail, password);
-
-      // Assert - Registration
-      await expect(page.getByText('Please provide a valid email')).toHaveText(
-        'Please provide a valid email address',
-      );
-    },
-  );
-
-  // 3c
-  test(
-    'should not register user with invalid email format: jane@com',
-    { tag: ['@smoke', '@registration'] },
-    async ({ page }) => {
-      // Arrange
-      const incorrectEmail = 'jane@com';
-      const { firstName, lastName, password } = loginData2;
-
-      // Act - Register
-      await userPage.createUser(firstName, lastName, incorrectEmail, password);
-
-      // Assert - Registration
-      await expect(page.getByText('Please provide a valid email')).toHaveText(
-        'Please provide a valid email address',
-      );
-    },
-  );
-
-  // 3d
-  test(
-    'should not register user with invalid email format: anna.kowalska.yahoo.com',
-    { tag: ['@smoke', '@registration'] },
-    async ({ page }) => {
-      // Arrange
-      const incorrectEmail = 'anna.kowalska.yahoo.com';
-      const { firstName, lastName, password } = loginData2;
-
-      // Act - Register
-      await userPage.createUser(firstName, lastName, incorrectEmail, password);
-
-      // Assert - Registration
-      await expect(page.getByText('Please provide a valid email')).toHaveText(
-        'Please provide a valid email address',
-      );
-    },
-  );
-
-  // 3e
-  test(
-    'should not register user with invalid email format: anna@kowalska@@yahoo.com',
-    { tag: ['@smoke', '@registration'] },
-    async ({ page }) => {
-      // Arrange
-      const incorrectEmail = 'anna@kowalska@@yahoo.com';
-      const { firstName, lastName, password } = loginData2;
-
-      // Act - Register
-      await userPage.createUser(firstName, lastName, incorrectEmail, password);
-
-      // Assert - Registration
-      await expect(page.getByText('Please provide a valid email')).toHaveText(
-        'Please provide a valid email address',
-      );
-    },
-  );
-
-  // 3f
-  test(
-    'should not register user with invalid email format: jan.kowalski@',
-    { tag: ['@smoke', '@registration'] },
-    async ({ page }) => {
-      // Arrange
-      const incorrectEmail = 'jan.kowalski@';
-      const { firstName, lastName, password } = loginData2;
-
-      // Act - Register
-      await userPage.createUser(firstName, lastName, incorrectEmail, password);
-
-      // Assert - Registration
-      await expect(page.getByText('Please provide a valid email')).toHaveText(
-        'Please provide a valid email address',
-      );
-    },
-  );
-
-  // 3g
-  test(
-    'should not register user with invalid email format: anna.kowalska@ yahoo.com',
-    { tag: ['@smoke', '@registration'] },
-    async ({ page }) => {
-      // Arrange
-      const incorrectEmail = 'anna.kowalska@ yahoo.com';
-      const { firstName, lastName, password } = loginData2;
-
-      // Act - Register
-      await userPage.createUser(firstName, lastName, incorrectEmail, password);
-
-      // Assert - Registration
-      await expect(page.getByText('Please provide a valid email')).toHaveText(
-        'Please provide a valid email address',
-      );
-    },
-  );
-
-  // 3f
-  test(
-    'should not register user with invalid email format: an!na @gmail.com',
-    { tag: ['@smoke', '@registration'] },
-    async ({ page }) => {
-      // Arrange
-      const incorrectEmail = 'an!na @gmail.com';
-      const { firstName, lastName, password } = loginData2;
-
-      // Act - Register
-      await userPage.createUser(firstName, lastName, incorrectEmail, password);
-
-      // Assert - Registration
-      await expect(page.getByText('Please provide a valid email')).toHaveText(
-        'Please provide a valid email address',
       );
     },
   );
