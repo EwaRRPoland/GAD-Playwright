@@ -1,13 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { faker } from '@faker-js/faker';
 import { LoginPage } from '../../UI/pages/login.page';
 import { HomePage } from '../../UI/pages/home.page';
 import { UserPage } from '../../UI/pages/user.page';
 
-import {
-  loginData1,
-  loginData2,
-  loginData3,
-} from '../../test-data/UI/login.data';
+import { loginData1 } from '../../test-data/UI/login.data';
 import { invalidEmails, invalidPasswords } from '../../test-data/UI/test.data';
 
 test.describe('User Authentication Tests. User Registration, Login and Deletion Test', () => {
@@ -31,7 +28,9 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
       { tag: ['@smoke', '@registration'] },
       async ({ page }) => {
         // Arrange
-        const { firstName, lastName, password } = loginData2;
+        const password = faker.internet.password();
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
 
         // Act - Register
         await userPage.createUser(
@@ -50,8 +49,8 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
   });
 
   // 5 replaces test group no. 5
-  // no password validation, you can create an account with a single character password
-  // these tests will fail once password verification is implemented
+  // Currently, there is no password validation - accounts can be created with single-character passwords.
+  // These tests may fail once password validation is implemented.
 
   invalidPasswords.forEach((password) => {
     test(
@@ -59,7 +58,9 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
       { tag: ['@smoke', '@registration', '@login'] },
       async ({ page }) => {
         // Arrange
-        const { firstName, lastName, email } = loginData1;
+        const email = faker.internet.email();
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
 
         // Act - Register
         await userPage.createUser(firstName, lastName, email, password);
@@ -74,16 +75,15 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
 
         // Assert - Login
         await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
-
-        // Act & Assert - Deletion
-        await homePage.deleteUser();
       },
     );
   });
 
   // 1
+  // Retrieves user data declared in the login.data.ts file for better data control.
+
   test(
-    'should register a new user successfully and log in',
+    'should register a new user successfully, log in and deletion',
     { tag: ['@e2e', '@registration', '@login', '@deletion'] },
     async ({ page }) => {
       // Arrange
@@ -181,10 +181,13 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
   // 4
   test(
     'should not register user with an existing email',
-    { tag: ['@e2e', '@registration', '@login', '@deletion'] },
+    { tag: ['@e2e', '@registration', '@login'] },
     async ({ page }) => {
       // Arrange
-      const { firstName, lastName, email, password } = loginData3;
+      const email = faker.internet.email();
+      const password = faker.internet.password();
+      const firstName = faker.person.firstName();
+      const lastName = faker.person.lastName();
       const password2 = '456$456';
 
       // Act - Register
@@ -210,14 +213,6 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
       await expect(page.getByTestId('alert-popup')).toHaveText(
         'User not created! Email not unique',
       );
-      // Act - Re-Login to deletion
-      await loginPage.login(email, password);
-
-      // Assert - Login
-      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
-
-      // Act & Assert - Deletion
-      await homePage.deleteUser();
     },
   );
 
@@ -227,8 +222,11 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
     { tag: ['@e2e', '@registration', '@login', '@deletion'] },
     async ({ page }) => {
       // Arrange
-      const { firstName, lastName, email, password } = loginData1;
-      //
+      const email = faker.internet.email();
+      const password = faker.internet.password();
+      const firstName = faker.person.firstName();
+      const lastName = faker.person.lastName();
+
       // Act - Register
       await userPage.createUser(firstName, lastName, email, password);
 
@@ -244,14 +242,12 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
       // Act & Assert - Deletion
       await homePage.deleteUser();
 
-      //
       // Act - Re-Login
       await page.waitForTimeout(2000); // 2 second delay to re-login
       await page.goto('http://localhost:3000/login/');
       await loginPage.login(email, password);
 
       // Assert - Login
-      //await page.waitForTimeout(2000); // 2 second delay
       await expect(page.getByTestId('login-error')).toHaveText(
         `Invalid username or password`,
       );
@@ -261,10 +257,13 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
   // 7a
   test(
     'should not login user with invalid email',
-    { tag: ['@e2e', '@registration', '@login', '@deletion'] },
+    { tag: ['@e2e', '@registration', '@login'] },
     async ({ page }) => {
       // Arrange
-      const { firstName, lastName, email, password } = loginData1;
+      const email = faker.internet.email();
+      const password = faker.internet.password();
+      const firstName = faker.person.firstName();
+      const lastName = faker.person.lastName();
       const emailInvalid = 'a@h.com';
 
       // Act - Register
@@ -280,25 +279,19 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
       await expect(page.getByTestId('login-error')).toHaveText(
         `Invalid username or password`,
       );
-
-      // Act - RE- Login
-      await loginPage.login(email, password);
-
-      // Assert - Login
-      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
-
-      // Act & Assert - Deletion
-      await homePage.deleteUser();
     },
   );
 
   // 7b
   test(
     'should not login user with invalid password',
-    { tag: ['@e2e', '@registration', '@login', '@deletion'] },
+    { tag: ['@e2e', '@registration', '@login'] },
     async ({ page }) => {
       // Arrange
-      const { firstName, lastName, email, password } = loginData1;
+      const email = faker.internet.email();
+      const password = faker.internet.password();
+      const firstName = faker.person.firstName();
+      const lastName = faker.person.lastName();
       const passwordInvalid = '45!5';
 
       // Act - Register
@@ -314,25 +307,19 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
       await expect(page.getByTestId('login-error')).toHaveText(
         `Invalid username or password`,
       );
-
-      // Act - RE- Login
-      await loginPage.login(email, password);
-
-      // Assert - Login
-      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
-
-      // Act & Assert - Deletion
-      await homePage.deleteUser();
     },
   );
 
   // 7c
   test(
     'should not login user with empty email',
-    { tag: ['@e2e', '@registration', '@login', '@deletion'] },
+    { tag: ['@e2e', '@registration', '@login'] },
     async ({ page }) => {
       // Arrange
-      const { firstName, lastName, email, password } = loginData1;
+      const email = faker.internet.email();
+      const password = faker.internet.password();
+      const firstName = faker.person.firstName();
+      const lastName = faker.person.lastName();
       const emailInvalid = '';
 
       // Act - Register
@@ -348,25 +335,19 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
       await expect(page.getByTestId('login-error')).toHaveText(
         `Invalid username or password`,
       );
-
-      // Act - RE- Login
-      await loginPage.login(email, password);
-
-      // Assert - Login
-      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
-
-      // Act & Assert - Deletion
-      await homePage.deleteUser();
     },
   );
 
   // 7d
   test(
     'should not login user with empty password',
-    { tag: ['@e2e', '@registration', '@login', '@deletion'] },
+    { tag: ['@e2e', '@registration', '@login'] },
     async ({ page }) => {
       // Arrange
-      const { firstName, lastName, email, password } = loginData1;
+      const email = faker.internet.email();
+      const password = faker.internet.password();
+      const firstName = faker.person.firstName();
+      const lastName = faker.person.lastName();
       const passwordInvalid = '';
 
       // Act - Register
@@ -382,30 +363,23 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
       await expect(page.getByTestId('login-error')).toHaveText(
         `Invalid username or password`,
       );
-
-      // Act - RE- Login
-      await loginPage.login(email, password);
-
-      // Assert - Login
-      await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
-
-      // Act & Assert - Deletion
-      await homePage.deleteUser();
     },
   );
 
   // 8
   test(
-    'should log out user successfully. Successful registration, login, logout and relogin, deletion',
+    'should log out user successfully. Successful registration, login, logout and relogin',
     {
-      tag: ['@e2e', '@registration', '@login', '@logout', '@deletion'],
+      tag: ['@e2e', '@registration', '@login', '@logout'],
     },
     async ({ page }) => {
       // Arrange
-      const { firstName, lastName, email, password } = loginData1;
+      const email = faker.internet.email();
+      const password = faker.internet.password();
+      const firstName = faker.person.firstName();
+      const lastName = faker.person.lastName();
 
       // Act - Register
-      await page.goto('http://localhost:3000/register.html');
       await userPage.createUser(firstName, lastName, email, password);
 
       // Assert - Registration
@@ -425,9 +399,6 @@ test.describe('User Authentication Tests. User Registration, Login and Deletion 
 
       // Assert - Login
       await expect(loginPage.userName).toHaveText(`Hi ${email}!`);
-
-      // Act & Assert - Deletion
-      await homePage.deleteUser();
     },
   );
 

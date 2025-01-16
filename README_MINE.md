@@ -12,6 +12,12 @@ npm init playwright@latest
 
 npm i
 
+# Faker.js Installation
+
+### Install Faker.js
+
+npm install @faker-js/faker
+
 # Instalacja Prettier jako zależności deweloperskiej
 
 npm install --save-dev --save-exact prettier

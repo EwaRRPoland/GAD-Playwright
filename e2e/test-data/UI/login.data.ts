@@ -1,25 +1,25 @@
 // user1
 export const loginData1 = {
-  firstName: 'Alann',
-  lastName: 'Doe',
-  email: 'alanalan.doe@example.com',
-  password: 'password123',
+  firstName: 'Marek',
+  lastName: 'Kowalski',
+  email: 'marek.kowalski@example.com',
+  password: 'securePass1',
 };
 
 // user2
 export const loginData2 = {
-  firstName: 'Anita',
-  lastName: 'Smith',
-  email: 'anita.smith@example.com',
-  password: 'password123',
+  firstName: 'Julia',
+  lastName: 'Nowak',
+  email: 'julia.nowak@example.com',
+  password: 'strongPassword2',
 };
 
 // user3
 export const loginData3 = {
-  firstName: 'Zosia',
-  lastName: 'Johnson',
-  email: 'zosiazosia.johnson@example.com',
-  password: 'password123',
+  firstName: 'Paweł',
+  lastName: 'Wiśniewski',
+  email: 'pawel.wisniewski@example.com',
+  password: 'mySecretPass3',
 };
 
 // userNew1
